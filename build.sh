@@ -4,6 +4,6 @@ cd recon
 
 rm package.zip
 
-zip -9mv package.zip policies src
+zip -9rv package.zip policies src
 
 exit 0

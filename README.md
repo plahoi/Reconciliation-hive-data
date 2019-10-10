@@ -145,3 +145,38 @@ insert into sandbox_apolyakov.recon_dest values
 ```
 
 >Тестирование проводилось на Hadoop Hortonworks 2.6.5, Spark 2.3.1, Python 2.7
+
+### Пример выполнения джоба на приведенных выше данных
+Вид данных после FullJoin двух таблиц
+```
++---+--------+-----------+----------+--------+-------+----------+
+| id|src_name|src_vozrast|   src_day|dst_name|dst_age|   dst_day|
++---+--------+-----------+----------+--------+-------+----------+
+|  4|   James|         21|2001-05-26|   James|    200|2001-05-26|
+| 55|    null|       null|      null|Penelopa|     38|2001-05-10|
+|  1|     Dow|         33|2018-07-13|     Dow|     33|2018-07-13|
+|  3|   Chris|         38|2001-05-26| Charles|     38|2001-05-26|
+|  5|Penelopa|         38|2001-05-30|    null|   null|      null|
+|  2|    Pits|        122|1917-04-12|    Pits|    120|1917-04-10|
++---+--------+-----------+----------+--------+-------+----------+
+```
+
+Результат работы джоба<br>
+На каждую невалидную проверку каждой колонки каждой строки создается отдельная строка в результирующем наборе данных
+> Если мы проверяем одну строку с тремя невалидными колонками, результат будет содержать 3 строки с описанием каждой невалидной проверки между переданными сущностями `src` и `dst`
+
+```
++--------------+---------------+---------------+-----------------+----------------+----------------+-------------------------------------------------------+--------------------------+----------+
+|data_key_value|src_column_name|dst_column_name|validation_method|src_column_value|dst_column_value|description                                            |check_dttm                |check_date|
++--------------+---------------+---------------+-----------------+----------------+----------------+-------------------------------------------------------+--------------------------+----------+
+|4             |src_vozrast    |dst_age        |int_validator    |21              |200             |Values 21 and 200 are not equal                        |2019-10-10 13:42:53.374320|2019-10-10|
+|55            |src_vozrast    |dst_age        |int_validator    |None            |38              |unsupported operand type(s) for -: 'NoneType' and 'int'|2019-10-10 13:42:53.374320|2019-10-10|
+|55            |src_day        |dst_day        |date_validator   |None            |2001-05-10      |Values None and 2001-05-10 are not equal               |2019-10-10 13:42:53.374320|2019-10-10|
+|55            |src_name       |dst_name       |string_validator |None            |Penelopa        |Values None and Penelopa are not equal                 |2019-10-10 13:42:53.374320|2019-10-10|
+|3             |src_name       |dst_name       |string_validator |Chris           |Charles         |Values Chris and Charles are not equal                 |2019-10-10 13:42:53.374320|2019-10-10|
+|5             |src_vozrast    |dst_age        |int_validator    |38              |None            |unsupported operand type(s) for -: 'int' and 'NoneType'|2019-10-10 13:42:53.374320|2019-10-10|
+|5             |src_day        |dst_day        |date_validator   |2001-05-30      |None            |Values 2001-05-30 and None are not equal               |2019-10-10 13:42:53.374320|2019-10-10|
+|5             |src_name       |dst_name       |string_validator |Penelopa        |None            |Values Penelopa and None are not equal                 |2019-10-10 13:42:53.374320|2019-10-10|
+|2             |src_day        |dst_day        |date_validator   |1917-04-12      |1917-04-10      |Values 1917-04-12 and 1917-04-10 are not equal         |2019-10-10 13:42:53.374320|2019-10-10|
++--------------+---------------+---------------+-----------------+----------------+----------------+-------------------------------------------------------+--------------------------+----------+
+```
