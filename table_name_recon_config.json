@@ -1,0 +1,29 @@
+{
+    "key": "id",
+    "col_1": {
+        "dst_column_name": "name",
+        "src_column_name": "name",
+        "validation": {
+            "properties": {},
+            "validationMethod": "string_validator"
+        }
+    },
+    "col_2": {
+        "dst_column_name": "age",
+        "src_column_name": "vozrast",
+        "validation": {
+            "properties": {
+                "tolerance": 0.1
+            },
+            "validationMethod": "int_validator"
+        }
+    },
+    "col_3": {
+        "dst_column_name": "day",
+        "src_column_name": "day",
+        "validation": {
+            "properties": {},
+            "validationMethod": "date_validator"
+        }
+    }
+}
