@@ -161,9 +161,7 @@ insert into sandbox_apolyakov.recon_dest values
 
 > Tests was performed on Hadoop Hortonworks 2.6.5, Spark 2.3.1, Python 2.7
 
-### Пример выполнения джоба на приведенных выше данных
-### 
-Вид данных после FullJoin двух таблиц
+### An example of a full join operation with the given `src` and `dst` data sources
 ```
 +---+--------+-----------+----------+--------+-------+----------+
 | id|src_name|src_vozrast|   src_day|dst_name|dst_age|   dst_day|
